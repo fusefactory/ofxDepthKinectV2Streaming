@@ -21,4 +21,5 @@ See the examples:
 
 ## To-Do
 
+- Improve documentation (instruction, server application)
 - Improve dependency
