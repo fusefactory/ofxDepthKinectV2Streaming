@@ -2,6 +2,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    ofSetFrameRate(60);
+    
     KinectConfig kinectConfig;
     kinectConfig.serverAddress = "192.168.1.77";
     kinectConfig.port = 4444;
@@ -34,6 +36,8 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     kinect->update();
+    
+    ofSetWindowTitle(ofToString(ofGetFrameRate()));
 }
 
 //--------------------------------------------------------------
