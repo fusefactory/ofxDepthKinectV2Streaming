@@ -16,8 +16,8 @@ Tested with OpenFrameworks 0.10 Mac OS.
 
 See the examples:
 
-- example-KinectReceiver
-- example-KinectRecorder
+- exampleKinectReceiver
+- exampleKinectRecorder
 
 ## To-Do
 

@@ -115,12 +115,18 @@ void KinectDevice::setAspect(float x, float y, float width, float height) {
 void KinectDevice::draw() {
     ofSetColor(255);
     texture.draw(x, y, width, height);
+}
+
+void KinectDevice::drawInfo(){
+    ofSetColor(255);
+
     ofDrawBitmapStringHighlight(fullName, x + 20, y + 20);
     if (isRunning()) {
         ofSetColor(0, 255, 0, 255);
     } else {
         ofSetColor(255, 0, 0, 255);
     }
+    
     ofDrawRectangle(x + 10, y + 6, 4, 20);
     ofSetColor(0, 0, 255);
     ofDrawLine(x + width / 2.0, y, x + width / 2.0, y + height);
