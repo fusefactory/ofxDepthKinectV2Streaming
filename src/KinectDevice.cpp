@@ -21,6 +21,7 @@ KinectDevice::KinectDevice(std::string name) {
     lastData = new float[DEPTH_WIDTH * DEPTH_HEIGHT];
     texture.allocate(DEPTH_WIDTH, DEPTH_HEIGHT, GL_RGB);
     texture.setTextureMinMagFilter(GL_NEAREST, GL_NEAREST); // for collison map
+    kinectRecordingFbo.allocate(DEPTH_WIDTH, DEPTH_HEIGHT, GL_RGB);
     
     // init black texture
     float *data = new float[DEPTH_WIDTH * DEPTH_HEIGHT * 3];
@@ -29,6 +30,8 @@ KinectDevice::KinectDevice(std::string name) {
     }
     texture.loadData(data, DEPTH_WIDTH, DEPTH_HEIGHT, GL_RGB);
     delete[] data;
+    
+    depthShader.load("shaders/depth.vert","shaders/depth.frag");
 }
 
 std::string KinectDevice::getName() {
@@ -91,10 +94,63 @@ int KinectDevice::getBottomMargin() {
     return bottomMargin;
 }
 
+void KinectDevice::loadKinectRecording(string _filename){
+    kinectRecordingFilename = _filename;
+    if(kinectRecording.load(kinectRecordingFilename)){
+        kinectRecording.setLoopState(OF_LOOP_NORMAL);
+        kinectRecording.play();
+        readKinectRecording = true;
+    }
+}
+
 void KinectDevice::update() {
-    float *data = updateEdgeData();
-    texture.loadData(data, DEPTH_WIDTH, DEPTH_HEIGHT, GL_RGB);
-    com = updateCom();
+    if(!readKinectRecording){
+        float *data = updateEdgeData();
+        texture.loadData(data, DEPTH_WIDTH, DEPTH_HEIGHT, GL_RGB);
+        com = updateCom();
+    }else{
+        kinectRecording.update();
+        
+        kinectRecordingFbo.begin();
+        depthShader.begin();
+        //        depthShader.setUniformMatrix4f("modelviewprojection", projection);
+        depthShader.setUniformTexture("fakeKinect", kinectRecording.getTexture(), 4);
+        depthShader.setUniform1f("onlyDepth", 1);
+        depthShader.setUniform1f("maxDistance", maxDistance);
+        
+        //distance
+        depthShader.setUniform1f("near", minDistance);
+        depthShader.setUniform1f("far", maxDistance);
+        
+        depthShader.setUniform1f("lens", 1.0); //lensFactor);
+        
+        //crop
+        depthShader.setUniform1f("top", topMargin);
+        depthShader.setUniform1f("bottom", bottomMargin);
+        depthShader.setUniform1f("right", rightMargin);
+        depthShader.setUniform1f("left", leftMargin);
+        
+        //offset
+        depthShader.setUniform1f("x", 0.0); //-xKinect);
+        depthShader.setUniform1f("y", 0.0); //yKinect);
+        
+        //Scale
+        depthShader.setUniform1f("scale", 1.0); //scaleKinect);
+        
+        //keystone
+        depthShader.setUniform1f("keystone", 1.0); //keystoneKinect);
+        
+        //correction
+        depthShader.setUniform1f("correction", 1.0); //correctionKinect);
+        
+        ofClear(0, 0, 0, 255);
+        ofSetColor(255,255,255,255);
+        kinectRecording.getTexture().draw(0.0,0.0,512.0,424.0);
+        depthShader.end();
+        
+        kinectRecordingFbo.end();
+        texture = kinectRecordingFbo.getTexture();
+    }
 }
 
 ofTexture &KinectDevice::getTexture() {
@@ -115,18 +171,12 @@ void KinectDevice::setAspect(float x, float y, float width, float height) {
 void KinectDevice::draw() {
     ofSetColor(255);
     texture.draw(x, y, width, height);
-}
-
-void KinectDevice::drawInfo(){
-    ofSetColor(255);
-
     ofDrawBitmapStringHighlight(fullName, x + 20, y + 20);
     if (isRunning()) {
         ofSetColor(0, 255, 0, 255);
     } else {
         ofSetColor(255, 0, 0, 255);
     }
-    
     ofDrawRectangle(x + 10, y + 6, 4, 20);
     ofSetColor(0, 0, 255);
     ofDrawLine(x + width / 2.0, y, x + width / 2.0, y + height);
@@ -144,7 +194,3 @@ float KinectDevice::convertToRealWorldX(float x, float depth) {
 float KinectDevice::convertToRealWorldY(float y, float depth) {
     return (0.5f - y / DEPTH_HEIGHT) * depth * YtoZ;
 }
-
-
-
-
