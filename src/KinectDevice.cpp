@@ -145,7 +145,7 @@ void KinectDevice::update() {
         
         ofClear(0, 0, 0, 255);
         ofSetColor(255,255,255,255);
-        kinectRecording.getTexture().draw(0.0,0.0,512.0,424.0);
+        kinectRecording.getTexture().draw(0.0,0.0, DEPTH_WIDTH, DEPTH_HEIGHT);
         depthShader.end();
         
         kinectRecordingFbo.end();
