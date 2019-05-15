@@ -20,10 +20,6 @@ public:
     std::vector<TrackedHand> getTrackedHands();
     void update(int maxBlobs) override;
     
-    void setMinArea(int &area) override;
-    void setMaxArea(int &area) override;
-    void toggleBlobs(bool &value) override;
-    
 private:
     std::vector<TrackedHand> hands;
     void calculateTrackedHands();
