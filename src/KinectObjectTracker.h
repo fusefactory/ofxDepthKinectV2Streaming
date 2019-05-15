@@ -44,6 +44,8 @@ private:
     
     bool showBlobs = true;
     ofFbo fbo;
+    
+    std::vector<ofVec3f> objectsTracked;
 };
 
 #endif /* KinectObjectTracker_h */

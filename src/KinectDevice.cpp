@@ -150,39 +150,39 @@ void KinectDevice::update() {
         depthShader.begin();
         depthShader.setUniformMatrix4f("modelview", modelviewFlat);
         depthShader.setUniformMatrix4f("projection", projectionFlat);
-        
-        //        depthShader.setUniformMatrix4f("modelviewprojection", projection);
+
+//        depthShader.setUniformMatrix4f("modelviewprojection", projection);
         depthShader.setUniformTexture("tex0", kinectRecording.getTexture(), 0);
         depthShader.setUniform1f("onlyDepth", 1);
         depthShader.setUniform1f("maxDistance", 5000);
-        
+
         //distance
         depthShader.setUniform1f("near", minDistance);
         depthShader.setUniform1f("far", maxDistance);
-        
+
         depthShader.setUniform1f("lens", 1.0); //lensFactor);
-        
+
         //crop
         depthShader.setUniform1f("top", topMargin);
-        depthShader.setUniform1f("bottom", bottomMargin);
-        depthShader.setUniform1f("right", rightMargin);
+        depthShader.setUniform1f("bottom", DEPTH_HEIGHT - bottomMargin);
+        depthShader.setUniform1f("right",DEPTH_WIDTH - rightMargin);
         depthShader.setUniform1f("left", leftMargin);
-        
+
         //offset
         depthShader.setUniform1f("x", 0.0); //-xKinect);
         depthShader.setUniform1f("y", 0.0); //yKinect);
-        
+
         depthShader.setUniform1f("noiseT", 1.0); //scaleKinect);
-        
+
         //Scale
         depthShader.setUniform1f("scale", 1.0); //scaleKinect);
-        
+
         //keystone
         depthShader.setUniform1f("keystone", keystone);
-        
+
         //correction
         depthShader.setUniform1f("correction", vertCorrection); //correctionKinect);
-        
+
         ofClear(0, 0, 0, 255);
         ofSetColor(255,255,255,255);
         kinectRecording.draw(0.0,0.0,512.0,424.0);
@@ -234,3 +234,7 @@ float KinectDevice::convertToRealWorldX(float x, float depth) {
 float KinectDevice::convertToRealWorldY(float y, float depth) {
     return (0.5f - y / DEPTH_HEIGHT) * depth * YtoZ;
 }
+
+
+
+

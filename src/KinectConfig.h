@@ -21,7 +21,7 @@ public:
     int leftMargin, rightMargin, topMargin, bottomMargin;
     ofVec2f position;
     ofVec2f scale;
-    int vertCorrection;
+    float vertCorrection;
     float keystone;
 };
 
