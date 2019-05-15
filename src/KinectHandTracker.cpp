@@ -56,16 +56,3 @@ void KinectHandTracker::calculateTrackedHands() {
 std::vector<TrackedHand> KinectHandTracker::getTrackedHands() {
     return hands;
 }
-
-void KinectHandTracker::setMinArea(int &area) {
-    KinectObjectTracker::setMinArea(area);
-}
-
-void KinectHandTracker::setMaxArea(int &area) {
-    KinectObjectTracker::setMaxArea(area);
-}
-
-void KinectHandTracker::toggleBlobs(bool &value) {
-    KinectObjectTracker::toggleBlobs(value);
-}
-
