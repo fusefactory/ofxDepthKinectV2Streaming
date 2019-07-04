@@ -19,7 +19,7 @@ void KinectBasePanel::addGuiComponents(KinectDevice *kinectDevice){
     this->add(minDistanceIntSlider.setup("MIN DISTANCE", 1, 1, 5000));
     minDistanceIntSlider.addListener(kinectDevice, &KinectDevice::setMinDistance);
 
-    this->add(maxDistanceIntSlider.setup("MAX DISTANCE", 10000, 1, 10000));
+    this->add(maxDistanceIntSlider.setup("MAX DISTANCE", 10000, 1, 15000));
     maxDistanceIntSlider.addListener(kinectDevice, &KinectDevice::setMaxDistance);
     
     this->add(leftMarginIntSlider.setup("LEFT MARGIN", 0, 0, KinectDevice::DEPTH_WIDTH));
