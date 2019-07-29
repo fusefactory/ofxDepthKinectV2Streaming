@@ -11,10 +11,13 @@
 #include <stdio.h>
 #include "ofxGui.h"
 #include "KinectDevice.h"
+#include "KinectSettings.h"
 
 class KinectBasePanel : public ofxPanel{    
     public:
         void addGuiComponents(KinectDevice *kinectDevice);
+        void addGuiComponents(KinectDevice *kinectDevice, KinectSettings kinectSettings);
+    
         void save();
         string &getFilename(){return filename;}
     
@@ -27,6 +30,9 @@ class KinectBasePanel : public ofxPanel{
         ofxIntSlider  rightMarginIntSlider;
         ofxIntSlider  topMarginIntSlider;
         ofxIntSlider  bottomMarginIntSlider;
+        ofxFloatSlider  vertCorrectionFloatSlider;
+        ofxFloatSlider  keystoneFloatSlider;
+
         ofxButton     saveButton;
 };
 #endif /* KinectBasePanel_hpp */
