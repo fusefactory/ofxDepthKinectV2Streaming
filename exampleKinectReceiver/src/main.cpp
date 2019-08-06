@@ -3,11 +3,17 @@
 
 //========================================================================
 int main( ){
-	ofSetupOpenGL(512,414,OF_WINDOW);			// <-------- setup the GL context
+    ofGLFWWindowSettings settings;
+    settings.glVersionMajor = 3;
+    settings.glVersionMinor = 3;
+    settings.windowMode = OF_WINDOW;
+    settings.setSize(512, 414);
 
-	// this kicks off the running of my app
-	// can be OF_WINDOW or OF_FULLSCREEN
-	// pass in width and height too:
-	ofRunApp(new ofApp());
+    shared_ptr<ofAppBaseWindow> mainWindow = ofCreateWindow(settings);
+    mainWindow->setWindowTitle("exampleKinectReceiver");
 
+    shared_ptr<ofApp> mainApp(new ofApp);
+    
+    ofRunApp(mainWindow, mainApp);          //execute setup
+    ofRunMainLoop();
 }

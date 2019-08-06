@@ -16,7 +16,9 @@ class KinectDevice {
     
 public:
     static const int DEPTH_WIDTH = 512;
+    const int DEPTH_WIDTH_HALF = DEPTH_WIDTH / 2;
     static const int DEPTH_HEIGHT = 424;
+    const int DEPTH_HEIGHT_HALF = DEPTH_HEIGHT / 2;
     const float FOV_H = ofDegToRad(70.6);
     const float FOV_V = ofDegToRad(60);
     
