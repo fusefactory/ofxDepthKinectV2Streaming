@@ -23,7 +23,7 @@ public:
     KinectDevice(std::string name);
     virtual void start() { };
     virtual void stop() { };
-    virtual bool isRunning() { };
+	virtual bool isRunning() { return false; };
     void update();
     std::string getName();
     void setAspect(float x, float y, float width, float height);
@@ -71,8 +71,8 @@ protected:
     int minDistance, maxDistance;
     int leftMargin, rightMargin, topMargin, bottomMargin;
     float keystone, vertCorrection;
-    virtual float *updateEdgeData() { };
-    virtual ofVec3f &updateCom() { };
+	virtual float* updateEdgeData() { return NULL; };
+	virtual ofVec3f& updateCom() { return ofVec3f();  };
     
 private:
     std::string name, fullName;

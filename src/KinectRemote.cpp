@@ -7,6 +7,8 @@
 //
 
 #include "KinectRemote.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 KinectRemote::KinectRemote(std::string name, std::string address, int port, int vertCorrection, float keystone) : KinectDevice(name) {
     this->vertCorrection = vertCorrection;
