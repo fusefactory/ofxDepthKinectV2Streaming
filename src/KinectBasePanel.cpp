@@ -40,11 +40,11 @@ void KinectBasePanel::addGuiComponents(KinectDevice *kinectDevice, KinectSetting
     this->add(bottomMarginIntSlider.setup("BOTTOM MARGIN", kinectSettings.bottomMargin.d, kinectSettings.bottomMargin.min, kinectSettings.bottomMargin.max));
     bottomMarginIntSlider.addListener(kinectDevice, &KinectDevice::setBottomMargin);
     
-    this->add(vertCorrectionFloatSlider.setup("KEYSTONE", kinectSettings.keystone.d, kinectSettings.keystone.min, kinectSettings.keystone.max));
-    vertCorrectionFloatSlider.addListener(kinectDevice, &KinectDevice::setKeystone);
+    this->add(keystoneFloatSlider.setup("KEYSTONE", kinectSettings.keystone.d, kinectSettings.keystone.min, kinectSettings.keystone.max));
+    keystoneFloatSlider.addListener(kinectDevice, &KinectDevice::setKeystone);
     
-    this->add(keystoneFloatSlider.setup("VERTICAL CORRECTION", kinectSettings.vertCorrection.d, kinectSettings.vertCorrection.min, kinectSettings.vertCorrection.max));
-    keystoneFloatSlider.addListener(kinectDevice, &KinectDevice::setVertCorrection);
+    this->add(vertCorrectionFloatSlider.setup("VERTICAL CORRECTION", kinectSettings.vertCorrection.d, kinectSettings.vertCorrection.min, kinectSettings.vertCorrection.max));
+    vertCorrectionFloatSlider.addListener(kinectDevice, &KinectDevice::setVertCorrection);
 }
 
 void KinectBasePanel::save(){
