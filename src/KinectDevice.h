@@ -74,7 +74,7 @@ protected:
     int leftMargin, rightMargin, topMargin, bottomMargin;
     float keystone, vertCorrection;
 	virtual float* updateEdgeData() { return NULL; };
-	virtual ofVec3f& updateCom() { return ofVec3f();  };
+	virtual ofVec3f& updateCom() { return com; };
     
 private:
     std::string name, fullName;
