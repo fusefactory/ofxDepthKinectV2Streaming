@@ -21,5 +21,6 @@ See the examples:
 
 ## To-Do
 
+- Check shaders added for recording
 - Improve documentation (instruction, server application)
 - Improve dependency

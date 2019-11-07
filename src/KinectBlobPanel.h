@@ -11,15 +11,16 @@
 #include <stdio.h>
 #include "KinectBasePanel.h"
 #include "KinectHandTracker.h"
+#include "KinectPositionObjectTracker.h"
 
 class KinectBlobPanel : public KinectBasePanel{
     public:
-        void addGuiComponents(KinectDevice *kinectDevice, KinectHandTracker *kinectHandTracker);
-    
+        void addGuiComponents(KinectDevice *kinectDevice, KinectObjectTracker *kinectObjectTracker);
+
         ofxToggle       blobToggle;
         ofxIntSlider    minAreaIntSlider;
         ofxIntSlider    maxAreaIntSlider;
     protected:
-        KinectHandTracker *kinectHandTracker;
+        KinectObjectTracker *kinectObjectTracker;
 };
 #endif /* KinectBlobPanel_hpp */

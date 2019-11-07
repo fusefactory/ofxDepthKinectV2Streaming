@@ -18,22 +18,20 @@
 class KinectRemote : public KinectDevice, KinectStreamListener {
     
 public:
-    KinectRemote(std::string name, std::string address, int port, int vertCorrection = 0, float keystone = 0);
+    KinectRemote(std::string name, std::string address, int port);
     void newData(char *data) override;
     void start() override;
     void stop() override;
     bool isRunning() override;
-    
+
 protected:
     float *updateEdgeData() override;
     ofVec3f &updateCom() override;
+    int xKeystone(const float pX, const float pY, float keystone);
 
 private:
     KinectStreamReceiver * receiver;
     float *edgeData;
     ofVec3f com;
-    int vertCorrection = 0;
-    float keystone = 0;
-    
 };
 #endif /* KinectRemote_h */

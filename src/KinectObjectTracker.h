@@ -19,14 +19,16 @@ class KinectObjectTracker : public ofThread {
     
 public:
     KinectObjectTracker(KinectDevice *kinect);
+    
     virtual void update(int maxBlobs);
     
-    virtual void setMinArea(int &area);
+    void setMinArea(int &area);
+    void setMaxArea(int &area);
+    void toggleBlobs(bool &value);
+    
     int getMinArea();
-    virtual void setMaxArea(int &area);
     int getMaxArea();
     
-    virtual void toggleBlobs(bool &value);
     bool showingBlobs();
     void drawBlobs(float x, float y, float width, float height);
     vector<ofxCvBlob> getBlobs();
@@ -44,6 +46,8 @@ private:
     
     bool showBlobs = true;
     ofFbo fbo;
+    
+    std::vector<ofVec3f> objectsTracked;
 };
 
 #endif /* KinectObjectTracker_h */
