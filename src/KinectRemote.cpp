@@ -106,6 +106,13 @@ float *KinectRemote::updateEdgeData() {
     return edgeData;
 }
 
+void KinectRemote::clearEdgeData(){
+    for(int i = 0; i < KinectDevice::DEPTH_WIDTH * KinectDevice::DEPTH_HEIGHT * 3; i++){
+        edgeData[i] = 0.0f;
+    }
+}
+
+
 ofVec3f &KinectRemote::updateCom() {
     return com;
 }

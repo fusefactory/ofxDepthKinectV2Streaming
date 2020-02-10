@@ -32,7 +32,8 @@ class KinectBasePanel : public ofxPanel{
         ofxIntSlider  bottomMarginIntSlider;
         ofxFloatSlider  vertCorrectionFloatSlider;
         ofxFloatSlider  keystoneFloatSlider;
-
+        ofxButton     clearImageButton;
+    
         ofxButton     saveButton;
 };
 #endif /* KinectBasePanel_hpp */

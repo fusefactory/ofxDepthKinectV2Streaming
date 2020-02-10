@@ -45,6 +45,9 @@ void KinectBasePanel::addGuiComponents(KinectDevice *kinectDevice, KinectSetting
     
     this->add(vertCorrectionFloatSlider.setup("VERTICAL CORRECTION", kinectSettings.vertCorrection.d, kinectSettings.vertCorrection.min, kinectSettings.vertCorrection.max));
     vertCorrectionFloatSlider.addListener(kinectDevice, &KinectDevice::setVertCorrection);
+    
+    this->add(clearImageButton.setup("CLEAR IMAGE"));
+    clearImageButton.addListener(kinectDevice, &KinectDevice::clearImage);
 }
 
 void KinectBasePanel::save(){

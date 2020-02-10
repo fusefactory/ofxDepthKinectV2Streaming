@@ -48,7 +48,7 @@ public:
     float getKeystone();
     void setVertCorrection(float &_vertCorrection);
     float getVertCorrection();
-    
+    void clearImage();
     void loadKinectRecording(string _filename);
     
     ofTexture &getTexture();
@@ -74,8 +74,9 @@ protected:
     int leftMargin, rightMargin, topMargin, bottomMargin;
     float keystone, vertCorrection;
 	virtual float* updateEdgeData() { return NULL; };
+    virtual void clearEdgeData() = 0;
 	virtual ofVec3f& updateCom() { return com; };
-    
+    bool bClearImage = false;
 private:
     std::string name, fullName;
     ofTexture texture;

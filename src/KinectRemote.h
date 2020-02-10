@@ -28,6 +28,7 @@ protected:
     float *updateEdgeData() override;
     ofVec3f &updateCom() override;
     int xKeystone(const float pX, const float pY, float keystone);
+    void clearEdgeData() override;
 
 private:
     KinectStreamReceiver * receiver;

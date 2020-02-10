@@ -127,6 +127,10 @@ float KinectDevice::getVertCorrection() {
     return vertCorrection;
 }
 
+void KinectDevice::clearImage(){
+    bClearImage = true;
+}
+
 
 void KinectDevice::loadKinectRecording(string _filename){
     kinectRecordingFilename = _filename;
@@ -138,6 +142,12 @@ void KinectDevice::loadKinectRecording(string _filename){
 }
 
 void KinectDevice::update() {
+    if(bClearImage){
+        bClearImage = false;
+        clearEdgeData();
+        cout << "---- CLEARED EDGE DATA ---" << endl;
+    }
+    
     if(!readKinectRecording){
         float *data = updateEdgeData();
         texture.loadData(data, DEPTH_WIDTH, DEPTH_HEIGHT, GL_RGB);
