@@ -148,10 +148,15 @@ void KinectDevice::update() {
         glDisable(GL_BLEND);
         kinectRecordingFbo.begin();
         depthShader.begin();
+        
+        depthShader.setUniform1f("kinectWidth", DEPTH_WIDTH);
+        depthShader.setUniform1f("kinectHeight", DEPTH_HEIGHT);
+        depthShader.setUniform1f("kinectHalfWidth", DEPTH_WIDTH / 2.0f);
+        depthShader.setUniform1f("kinectHalfHeight", DEPTH_HEIGHT / 2.0f);
+        
         depthShader.setUniformMatrix4f("modelview", modelviewFlat);
         depthShader.setUniformMatrix4f("projection", projectionFlat);
 
-//        depthShader.setUniformMatrix4f("modelviewprojection", projection);
         depthShader.setUniformTexture("tex0", kinectRecording.getTexture(), 0);
         depthShader.setUniform1f("onlyDepth", 1);
         depthShader.setUniform1f("maxDistance", 5000);
@@ -185,7 +190,7 @@ void KinectDevice::update() {
 
         ofClear(0, 0, 0, 255);
         ofSetColor(255,255,255,255);
-        kinectRecording.draw(0.0,0.0,512.0,424.0);
+        kinectRecording.draw(0.0,0.0, DEPTH_WIDTH, DEPTH_HEIGHT);
         
         depthShader.end();
         kinectRecordingFbo.end();

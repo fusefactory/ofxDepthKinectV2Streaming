@@ -32,7 +32,8 @@ private:
     ofxTCPClient tcpClient;
     void threadedFunction();
     void readBytes(char *buffer, unsigned int length);
-    char *decompress(char *compressedBytes, unsigned int length);
+    int decompress(char *compressedBytes, unsigned int compressedLenght, char *uncompressedBytes, unsigned int uncompressedSize);
+    bool firstAttempConnection;
     std::vector<KinectStreamListener *> listeners;
 };
 #endif /* KinectStreamReceiver_h */

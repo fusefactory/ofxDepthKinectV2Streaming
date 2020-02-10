@@ -8,10 +8,12 @@
 
 #include "KinectStreamReceiver.h"
 #include "zlib.h"
+#include "KinectDevice.h"
 
 KinectStreamReceiver::KinectStreamReceiver(std::string address, int port) {
     KinectStreamReceiver::address = address;
     KinectStreamReceiver::port = port;
+    firstAttempConnection = true;
 }
 
 void KinectStreamReceiver::addListener(KinectStreamListener * listener) {
@@ -29,6 +31,8 @@ void KinectStreamReceiver::stop() {
     if (tcpClient.isConnected()) {
         tcpClient.close();
     }
+    
+    firstAttempConnection = true;
 }
 
 bool KinectStreamReceiver::isRunning() {
@@ -43,7 +47,9 @@ void KinectStreamReceiver::threadedFunction() {
             // if we are not connected lets try and reconnect every 5 seconds
             deltaTime = ofGetElapsedTimeMillis() - connectTime;
             
-            if (deltaTime > 5000){
+            if (firstAttempConnection || deltaTime > 5000){
+                firstAttempConnection = false;
+                
                 cout << ofGetTimestampString() + " - KinectStreamReceiver: trying connection to " + address + ":" + to_string(port) << endl;
                 
                 tcpClient.setup(address, port);
@@ -65,21 +71,24 @@ void KinectStreamReceiver::threadedFunction() {
             int b2 = (int)(0x0ff & header[2]);
             int b3 = (int)(0x0ff & header[3]);
             int length = ((b0 << 24) | (b1 << 16) | (b2 << 8) | b3);
-            
+                        
             if (length > 0) {
                 // data
                 char *data = new char[length];
                 readBytes(data, length);
-                char *uncompressed = decompress(data, length);
-                
+                const unsigned int uncompressedSize = KinectDevice::DEPTH_WIDTH * KinectDevice::DEPTH_HEIGHT * 2;
+                char *uncompressed = new char[uncompressedSize];
+                decompress(data, length, uncompressed, uncompressedSize);
+
                 for (KinectStreamListener *listener : listeners) {
                     listener->newData(uncompressed);
                 }
                 
-                free(uncompressed);
                 delete[] data;
-                delete[] header;
+                delete[] uncompressed;
             }
+            
+            delete[] header;
         }
         
 //        sleep(10);
@@ -98,37 +107,24 @@ void KinectStreamReceiver::readBytes(char *buffer, unsigned int length) {
     }
 }
 
-char *KinectStreamReceiver::decompress(char *compressedBytes, unsigned int length) {
-    const int outSize = 512 * 424 * 2;
-    char *uncompressedBytes = (char *)calloc(sizeof(char), outSize);
-    
+int KinectStreamReceiver::decompress(char *compressedBytes, unsigned int compressedLenght, char *uncompressedBytes, unsigned int uncompressedSize) {
     z_stream strm;
     strm.zalloc = Z_NULL;
     strm.zfree = Z_NULL;
     strm.opaque = Z_NULL;
-    strm.avail_in = length;
+    strm.avail_in = compressedLenght;
     strm.next_in = (Bytef *)(compressedBytes);
+    strm.next_out = (Bytef *)(uncompressedBytes);
+    strm.avail_out = uncompressedSize;
     
     if (inflateInit (&strm) != Z_OK) {
-        free(uncompressedBytes);
-        return uncompressedBytes;
+        return -1;
     }
     
-    bool done = false;
-    do {
-        strm.avail_out = outSize - strm.total_out;
-        strm.next_out = (Bytef *)(uncompressedBytes + strm.total_out);
-        
-        int ret = inflate(&strm, Z_SYNC_FLUSH);
-        if (ret == Z_STREAM_END) done = true;
-        else if (ret != Z_OK) break;
-        
-    } while (!done || strm.avail_out > 0);
-    
-    if (inflateEnd (&strm) != Z_OK) {
-        free(uncompressedBytes);
-        return uncompressedBytes;
-    }  
-    
-    return uncompressedBytes;
+    int inflateResult = inflate(&strm, Z_FINISH);
+    if(inflateEnd(&strm) != Z_OK){
+        return -1;
+    }
+
+    return strm.total_out;
 }

@@ -26,17 +26,14 @@ uniform float correction;
 uniform float noiseT;
 uniform float maxDistance;
 
-const float kinectWidth = 512.0;
-const float kinectHeight = 424.0;
-const float kinectHalfWidth = 256.0;
-const float kinectHalfHeight = 212.0;
+uniform float kinectWidth;
+uniform float kinectHeight;
+uniform float kinectHalfWidth;
+uniform float kinectHalfHeight;
 
 const float low2 = 1.0;
 
 float myFar;
-
-
-in float discardPixel;
 
 in vec4 depth;
 in vec2 vertTexCoord;
@@ -44,7 +41,7 @@ in vec2 vertTexCoord;
 out vec4 outColor;
 
 void crop(const vec2 pos){
-    if ( pos.x < left || pos.x > right || pos.y < top || pos.y > bottom){// pos.y > 288.0 // || pos.y > 235.0 || pos.y < 75.0) {
+    if ( pos.x < left || pos.x > right || pos.y < top || pos.y > bottom){
         discard;
     }
 }
@@ -54,52 +51,25 @@ float approxRound(const float f){
     return floor(f) + 0.5;
 }
 
-//vec2 moveAndScaleAndKeystone(vec2 pos){  //now this part runs in the vert shader
-////    pos.x = pos.x / scale + x;
-////    pos.y = pos.y / scale + y;
-//
-//    float relYFromCenter = (pos.y - kinectHalfHeight) / kinectHalfHeight ; //from -1 to 1
-//    float absXFromCenter = (pos.x - kinectHalfWidth);
-//
-//    pos.x += relYFromCenter * keystone * absXFromCenter;
-//
-//    return pos;
-//}
-
 float depthValue(vec2 pos){
     
     float valueTex = texture(tex0, vec2(approxRound(pos.x), approxRound(pos.y))).x;
     if(valueTex <= 0.05) valueTex = 1.0;    // ===========> IMPORTANT!!!
     float value = maxDistance * (1.0-valueTex); // depending on kinect recording: 1.0- needed if near staff are white.
-
-//vec4 value = vec4(texture2DRect(fakeKinect, vec2(texCoordVarying.s,texCoordVarying.t)).rgb,1.0);
-    //    myFar += correction * (1.0 - (kinectHeight/2.0 + pos.y) / kinectHeight);
-
+    
     myFar = far * (1.0 -  correction * (cos(M_PI / 3.0 * (kinectHeight - pos.y) / kinectHeight) - 0.5));
-
-//    return clamp(value / far, 0.0, 1.0);
-//    float valuePost = value/(far-near);
-//    if(valueTex>=noiseT) return 1.0;
-//    else return valueTex;
+    
     return clamp(low2 + (value - near) / (near - myFar), 0.0, 1.0);
-
 }
 
-void main()
-{
-    //    myFar = far;
-    
+void main(){
     vec2 pos = vertTexCoord.xy;
-
     
-//    pos = moveAndScaleAndKeystone(pos);       //move and scale and keystone
     crop(pos);                               //crop (top, bottom, left, right)
     
     float d = depthValue(pos);     //d is depth value for kinect
 
-//    if (discardPixel == 1.0){
-    if (d >= noiseT || discardPixel == 1.0){
-//        if (d >= noiseT){
+    if (d >= noiseT){
         discard;
     }
     else if (! onlyDepth){
@@ -124,7 +94,6 @@ void main()
                 }
             }
         }
-//        if(white > 4 && black > 1){// white > 4 && black < 2){
         if(white > 1 && black > 1){// white > 4 && black < 2){
             //ok
         }
@@ -132,10 +101,6 @@ void main()
             d = 0.0;
         }
     }
-//    gl_FragColor = vec4(1.0,0.0,0.0,1.0);
-//    gl_FragColor = depth; //vec4(texture2DRect(fakeKinect, texCoordVarying.xy).rgb,1.0);
-//    outColor = vec4(texture(tex0,vec2(vertTexCoord.x,vertTexCoord.y)).xyz,1.0); //
-    outColor = vec4(vec3(d,d,d), 1.0);
-//    outColor = vec4(0.0,1.0,1.0, 1.0);
 
+    outColor = vec4(vec3(d,d,d), 1.0);
 }
