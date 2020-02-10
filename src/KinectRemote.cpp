@@ -10,7 +10,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-KinectRemote::KinectRemote(std::string name, std::string address, int port) : KinectDevice(name) {
+KinectRemote::KinectRemote(std::string name, std::string address, int port, unsigned int bytesPerPixel) : KinectDevice(name, bytesPerPixel) {
     edgeData = new float[int(DEPTH_WIDTH * DEPTH_HEIGHT * 3)]; // rgb
     
     receiver = new KinectStreamReceiver(address, port);
@@ -53,21 +53,23 @@ void KinectRemote::newData(char *data) {
             // keystone
             if (posX >= leftMargin && posX <= DEPTH_WIDTH - rightMargin && posY >= topMargin && posY <= DEPTH_HEIGHT - bottomMargin) {
 
-                //            int depthIndex = int((posX + y * DEPTH_WIDTH) * 4);
-                //            int byte0 = data[depthIndex + 0];
-                //            int byte1 = data[depthIndex + 1];
-                //            int byte2 = data[depthIndex + 2];
-                //            int byte3 = data[depthIndex + 3];
+                int depthIndex = int((posX + y * DEPTH_WIDTH) * bytesPerPixel);
+                int depth = 0;
                 
-                // 2 bytes for depth values
-                int depthIndex = int((posX + y * DEPTH_WIDTH) * 2);
-                
-                int byte0 = 0;
-                int byte1 = 0;
-                int byte2 = data[depthIndex + 0];
-                int byte3 = data[depthIndex + 1];
-                int depth = byte0 << 24 | (byte1 & 0xFF) << 16 | (byte2 & 0xFF) << 8 | (byte3 & 0xFF);
-                
+                //1 byte
+                if(bytesPerPixel == 1){
+                    int value = data[depthIndex] & 255;
+                    depth =  value * 39; //ipotizzo che il numero massimo in mm sia 10000 e lo divido per 256
+                }
+                //2 byte
+                else if (bytesPerPixel == 2){
+                    int byte0 = 0;
+                    int byte1 = 0;
+                    int byte2 = data[depthIndex + 0];
+                    int byte3 = data[depthIndex + 1];
+                    depth = byte0 << 24 | (byte1 & 0xFF) << 16 | (byte2 & 0xFF) << 8 | (byte3 & 0xFF);
+                }
+
                 bool valid = false;
                 if (posX >= leftMargin && posX <= DEPTH_WIDTH - rightMargin && posY >= topMargin && posY <= DEPTH_HEIGHT - bottomMargin) {
                     int correctMaxDistance = maxDistance * (1.0 - vertCorrection * (cos(M_PI / 3.0 * (DEPTH_HEIGHT - y) / DEPTH_HEIGHT) - 0.5));

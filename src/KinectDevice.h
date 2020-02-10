@@ -22,7 +22,7 @@ public:
     const float FOV_H = ofDegToRad(70.6);
     const float FOV_V = ofDegToRad(60);
     
-    KinectDevice(std::string name);
+    KinectDevice(std::string name, unsigned int bytesPerPixel = 2);
     virtual void start() { };
     virtual void stop() { };
 	virtual bool isRunning() { return false; };
@@ -77,6 +77,8 @@ protected:
     virtual void clearEdgeData() = 0;
 	virtual ofVec3f& updateCom() { return com; };
     bool bClearImage = false;
+    unsigned int bytesPerPixel;
+    
 private:
     std::string name, fullName;
     ofTexture texture;

@@ -18,7 +18,7 @@
 class KinectRemote : public KinectDevice, KinectStreamListener {
     
 public:
-    KinectRemote(std::string name, std::string address, int port);
+    KinectRemote(std::string name, std::string address, int port, unsigned int bytesPerPixel = 2);
     void newData(char *data) override;
     void start() override;
     void stop() override;

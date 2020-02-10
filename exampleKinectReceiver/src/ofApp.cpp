@@ -16,7 +16,7 @@ void ofApp::setup(){
     kinectConfig.vertCorrection = 1;
     kinectConfig.keystone = 0;
 
-    kinect = new KinectRemote("kinect", kinectConfig.serverAddress, kinectConfig.port);
+    kinect = new KinectRemote("kinect", kinectConfig.serverAddress, kinectConfig.port, 2);
     kinect->setMinDistance(kinectConfig.minDistance);
     kinect->setMaxDistance(kinectConfig.maxDistance);
     kinect->setLeftMargin(kinectConfig.leftMargin);

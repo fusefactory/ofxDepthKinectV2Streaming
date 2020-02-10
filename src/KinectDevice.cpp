@@ -10,8 +10,10 @@
 #include "ofApp.h"
 #include <algorithm>
 
-KinectDevice::KinectDevice(std::string name) {
+KinectDevice::KinectDevice(std::string name, unsigned int bytesPerPixel) {
     KinectDevice::name = name;
+    KinectDevice::bytesPerPixel = bytesPerPixel;
+    
     fullName = name + " KINECT";
     std::transform(fullName.begin(), fullName.end(), fullName.begin(), ::toupper);
     
