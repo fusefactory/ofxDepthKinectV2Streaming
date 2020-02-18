@@ -1,4 +1,7 @@
-# ofxDepthKinectV2Streaming
+# ofxDepthKinectV2Streaming (deprecated)
+
+**Note: ofxDepthKinectV2Streaming is depracated, It it is merged inside [ofxStreamDepthKinect](https://github.com/fusefactory/ofxDepthStreamKinect).**
+
 
 OpenFrameworks addon to receive data from kinect v2 over network;
 
